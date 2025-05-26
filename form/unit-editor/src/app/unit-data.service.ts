@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { firstValueFrom } from 'rxjs';
+import { id } from 'zod/v4/locales';
 
 @Injectable({
   providedIn: 'root'
@@ -45,16 +46,29 @@ export class UnitDataService {
     return of(unitFiles);
   }
 
-  async getFactionData(fileName: string): Promise<Observable<any | {}>> {
+  async getFactionData(fileName: string): Promise<Observable<any | []>> {
     console.log(`UnitDataService: Getting faction data for ${fileName}`);
     // Read data from /data/units/${fileName}
     const filePath = `assets/data/units/${fileName}`;
     try {
       const response = await firstValueFrom(this.http.get(filePath));
       const data = JSON.parse(JSON.stringify(response));
-      console.log(`File ${fileName} exists (${Object.keys(data).length} profiles loaded)`);
-      this.factionUnitData[fileName] = data;
-      return of(data ? JSON.parse(JSON.stringify(data)) : {});
+      const dataToArray: any[] = [];
+
+      for (const key in data) {
+        if (Object.prototype.hasOwnProperty.call(data, key)) {
+          dataToArray.push({
+            ...data[key],
+            id: key
+          });
+        }
+      }
+
+      console.log(`File ${fileName} exists (${dataToArray.length} profiles loaded)`);
+      this.factionUnitData[fileName] = dataToArray;
+      return of(dataToArray);
+      // return of(data ? data : []);
+      // return of(data ? JSON.parse(JSON.stringify(data)) : []);
     } catch (error) {
       console.error(`Error checking file ${fileName}:`, error);
       return of({});

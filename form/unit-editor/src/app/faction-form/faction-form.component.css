@@ -1,3 +1,24 @@
 h2 {
   text-transform: capitalize;
 }
+.unit-items {
+  list-style: none;
+  padding: 0;
+}
+.unit-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.unit-item span {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.unit-item .actions button {
+  margin-left: 8px;
+}

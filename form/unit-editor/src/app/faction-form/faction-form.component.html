@@ -1,18 +1,18 @@
 <h2>Edit {{ factionId }}</h2>
-
-<div *ngIf="isLoading" class="loading-indicator">
-  <p>Loading data...</p>
-</div>
-
-<div *ngIf="!isLoading && factionData.length === 0" class="no-data">
-  <p>No data found for {{ factionId }}.</p>
-  <p>Try creating a new unit.</p>
-</div>
-
-<div *ngIf="!isLoading && factionData.length > 0" class="faction-data">
-  <h3>Unit List</h3>
-
-  <ul>
-    <li *ngFor="let unit of factionData">{{ unit.name }} ({{ unit.type }})</li>
+<div *ngIf="(factionData$ | async) as profiles; else loading">
+  <ul *ngIf="profiles.length > 0; else noProfiles" class="unit-items">
+    <li *ngFor="let unit of profiles" class="unit-item">
+      <span>{{ unit.name }} ({{ unit.type }})</span>
+      <div class="actions">
+        <button (click)="selectUnit(unit.id)">Edit</button>
+        <button (click)="deleteUnit(unit.id)" class="delete">Delete</button>
+      </div>
+    </li>
   </ul>
+  <ng-template #noProfiles>
+    <p>No profiles found. Create one!</p>
+  </ng-template>
 </div>
+<ng-template #loading>
+  <p>Loading faction profiles...</p>
+</ng-template>

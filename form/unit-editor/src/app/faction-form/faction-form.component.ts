@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import { UnitDataService } from '../unit-data.service';
 
 @Component({
@@ -11,8 +12,8 @@ import { UnitDataService } from '../unit-data.service';
 })
 export class FactionFormComponent {
   factionId: string | null = null;
-  isLoading: boolean = true; // To manage loading state
   factionData: any = [];
+  factionData$: Observable<any[]> = of([]);
 
   constructor(
     private unitDataService: UnitDataService,
@@ -20,32 +21,38 @@ export class FactionFormComponent {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.isLoading = true;
-
-    this.route.paramMap.subscribe(params => {
+  async ngOnInit(): Promise<void> {
+    this.route.paramMap.subscribe(async params => {
       const factionId = params.get('faction');
       if (factionId) {
         this.factionId = factionId;
-        this.unitDataService.getFactionData(`${this.factionId}.json`).then((observable) => {
-          observable.subscribe(data => {
-            if (data && Object.keys(data).length > 0) {
-              console.log(`faction form component: Got faction data for ${this.factionId}`, data);
-              // data is an object, convert it to an array
-              this.factionData = Object.values(data);
-            } else {
-              console.warn(`No data found for ${this.factionId}, or data is empty. Initializing with default structure.`);
-              this.factionData = [];
-            }
-          });
-        });
-        this.isLoading = false;
+        this.factionData$ = await this.unitDataService.getFactionData(`${this.factionId}.json`);
       } else {
         this.factionId = null;
-        // this.initializeNewUnitData();
-        // this.prepareUnitDataForDisplay();
-        this.isLoading = false;
       }
     });
+  }
+
+  selectUnit(unitId: string): void {
+    console.log('Selected unit:', unitId);
+    this.router.navigate(['/edit', this.factionId, unitId]);
+  }
+
+  deleteUnit(unitId: string): void {
+    // Add a confirmation dialog before deleting
+    if (confirm(`Are you sure you want to delete ${unitId}?`)) {
+      console.log('Deleting unit:', unitId);
+      this.unitDataService.deleteUnitFile(unitId).subscribe({ // Assuming deleteUnitFile returns an Observable
+        next: async () => {
+          console.log(`${unitId} deleted successfully`);
+          // Refresh the list after deletion
+          this.factionData$ = await this.unitDataService.getFactionData(`${this.factionId}.json`);
+        },
+        error: (err) => {
+          console.error(`Error deleting ${unitId}`, err);
+          // Optionally, display an error message to the user
+        }
+      });
+    }
   }
 }
