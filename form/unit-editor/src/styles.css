@@ -4,10 +4,13 @@ body {
   background-color: #f4f4f4;
   color: #333;
 }
-.container {
+app-root {
+  display: block;
   width: 80%;
   margin: auto;
   overflow: hidden;
+}
+.container {
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -52,6 +55,12 @@ button.delete:hover {
 .error-messages ul {
   list-style-type: none;
   padding-left: 0;
+}
+nav {
+  display: flex;
+  justify-content: start;
+  column-gap: 20px;
+  padding-bottom: 20px;
 }
 nav a {
   padding: 5px 10px;

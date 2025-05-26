@@ -1,16 +1,12 @@
 import {z} from "zod"
-import {dataKeys as keysFromData} from "@/lib.ts"
-
-// @ts-ignore: Below is a wrapper function with an ignored line for TS. Couldn't figure this one out, z.enum will only accept a readonly argument, yet it's defined as a const...
-const dataKeys = async (dataset: string) => z.enum(await keysFromData(dataset))
 
 // This schema is used to validate the core structure of the files that contain the required schema.
 export const Dataset = z.record(z.string(), z.any())
 
 export const Abilities = z.array(z.union([z.string(), z.array(z.string())]))
-export const Army = await dataKeys('armies')
-export const ModelAdvantage = await dataKeys('advantages')
-export const Faction = await dataKeys('factions')
+export const Army = z.string()
+export const ModelAdvantage = z.string()
+export const Faction = z.string()
 
 export const Feat = z.record(z.string(), z.object({
 	name: z.string(),
@@ -19,7 +15,7 @@ export const Feat = z.record(z.string(), z.object({
 
 export const Points = z.number().positive()
 export const Range = z.union([z.number().positive(), z.literal("self"), z.literal("controlRange")])
-export const WeaponQuality = await dataKeys('qualities')
+export const WeaponQuality = z.string()
 
 export const WeaponType = z.enum([
 	"melee",

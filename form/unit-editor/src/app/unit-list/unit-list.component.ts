@@ -12,20 +12,21 @@ import { UnitDataService } from '../unit-data.service';
   styleUrls: ['./unit-list.component.css']
 })
 export class UnitListComponent implements OnInit {
-  unitFiles$: Observable<string[]> = of([]);
+  // unitFiles$: Observable<string[]> = of([]);
+  unitFiles$: Observable<{ fileName: string; profileCount: number; }[]> = of([]);
 
   constructor(
     private unitDataService: UnitDataService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.unitFiles$ = this.unitDataService.listUnitFiles();
+  async ngOnInit(): Promise<void> {
+    this.unitFiles$ = await this.unitDataService.listUnitFiles();
   }
 
   selectUnit(fileName: string): void {
     console.log('Selected unit:', fileName);
-    this.router.navigate(['/edit', fileName]);
+    this.router.navigate(['/edit', fileName.replace('.json', '')]);
   }
 
   createNewUnit(): void {
@@ -38,10 +39,10 @@ export class UnitListComponent implements OnInit {
     if (confirm(`Are you sure you want to delete ${fileName}?`)) {
       console.log('Deleting unit:', fileName);
       this.unitDataService.deleteUnitFile(fileName).subscribe({ // Assuming deleteUnitFile returns an Observable
-        next: () => {
+        next: async () => {
           console.log(`${fileName} deleted successfully`);
           // Refresh the list after deletion
-          this.unitFiles$ = this.unitDataService.listUnitFiles();
+          this.unitFiles$ = await this.unitDataService.listUnitFiles();
         },
         error: (err) => {
           console.error(`Error deleting ${fileName}`, err);

@@ -24,6 +24,71 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "armies.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "advantages.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "factions.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "qualities.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "rules.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "spells.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "cryx.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "cygnar.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "dusk.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "khador.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "khymaera.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "orgoth.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
+              },
+              {
+                "glob": "southern-kriels.json",
+                "input": "../../data/units/",
+                "output": "assets/data/units/"
               }
             ],
             "styles": [
@@ -82,6 +147,36 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "armies.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "advantages.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "factions.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "qualities.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "rules.json",
+                "input": "../../data/",
+                "output": "assets/data/"
+              },
+              {
+                "glob": "spells.json",
+                "input": "../../data/",
+                "output": "assets/data/"
               }
             ],
             "styles": [

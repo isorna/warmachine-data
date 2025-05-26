@@ -4,5 +4,20 @@
 	},
 	"cygnar": {
 		"name": "Cygnar"
+	},
+	"dusk": {
+		"name": "Dusk"
+	},
+	"khador": {
+		"name": "Khador"
+	},
+	"khymaera": {
+		"name": "Khymaera"
+	},
+	"orgoth": {
+		"name": "Orgoth"
+	},
+	"southern-kriels": {
+		"name": "Southern Kriels"
 	}
 }

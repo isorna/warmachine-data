@@ -1,6 +1,10 @@
 <h2>{{ unitFileName ? 'Edit Unit: ' + unitFileName : 'Create New Unit' }}</h2>
 
-<form (ngSubmit)="saveUnit()" #unitForm="ngForm">
+<div *ngIf="isLoading" class="loading-indicator">
+  <p>Loading form...</p>
+</div>
+
+<form *ngIf="!isLoading" (ngSubmit)="saveUnit()" #unitForm="ngForm">
   <div class="form-group">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" [(ngModel)]="unitData.name" required #nameField="ngModel">
@@ -21,11 +25,46 @@
 
   <div class="form-group">
     <label for="faction">Faction:</label>
-    <input type="text" id="faction" name="faction" [(ngModel)]="unitData.faction" required #factionField="ngModel">
-      <div *ngIf="factionField.invalid && (factionField.dirty || factionField.touched)" class="field-error">
+    <select id="faction" name="faction" [(ngModel)]="unitData.faction" required #factionField="ngModel">
+      <option [ngValue]="null" disabled *ngIf="!(availableFactions$ | async)?.length && !unitData.faction">Loading factions...</option>
+      <option [ngValue]="null" disabled *ngIf="(availableFactions$ | async)?.length === 0 && !unitData.faction">No factions available</option>
+      <option *ngFor="let factionKey of (availableFactions$ | async)" [value]="factionKey">{{ factionKey.replace('-', ' ') }}</option>
+       <!-- Allow current faction if not in list, for existing data integrity -->
+      <option *ngIf="unitData.faction && !(availableFactions$ | async)?.includes(unitData.faction)" [value]="unitData.faction">{{unitData.faction}} (current)</option>
+    </select>
+    <div *ngIf="factionField.invalid && (factionField.dirty || factionField.touched)" class="field-error">
       Faction is required.
     </div>
   </div>
+
+  <div class="form-group">
+    <label for="baseSize">Base Size (mm):</label>
+    <input type="number" id="baseSize" name="baseSize" [(ngModel)]="unitData.baseSize">
+  </div>
+
+  <div class="form-group">
+    <label for="fieldAllowance">Field Allowance:</label>
+    <input type="text" id="fieldAllowance" name="fieldAllowance" [(ngModel)]="unitData.fieldAllowance">
+  </div>
+
+  <div class="form-group">
+    <label for="advantages">Advantages (comma-separated):</label>
+    <input type="text" id="advantages" name="advantages_display" [(ngModel)]="unitData.advantages_display">
+    <small>Available: {{ (availableAdvantages$ | async)?.join(', ') }}</small>
+  </div>
+
+  <div class="form-group">
+    <label for="armies">Armies (comma-separated):</label>
+    <input type="text" id="armies" name="armies_display" [(ngModel)]="unitData.armies_display">
+    <small>Available: {{ (availableArmies$ | async)?.join(', ') }}</small>
+  </div>
+
+  <div class="form-group">
+    <label for="keywords">Keywords (comma-separated):</label>
+    <input type="text" id="keywords" name="keywords_display" [(ngModel)]="unitData.keywords_display">
+     <!-- Assuming keywords are free-form for now, no availableKeywords$ -->
+  </div>
+
 
   <!-- Example of a conditional field based on type -->
   <div *ngIf="unitData.type === 'solo' || unitData.type === 'unit' || unitData.type === 'attachment'">
@@ -34,31 +73,42 @@
       <input type="number" id="points" name="points" [(ngModel)]="unitData.points">
     </div>
   </div>
-  
+
+  <div *ngIf="unitData.type === 'unit'">
+    <div class="form-group">
+      <label for="grunts">Grunts:</label>
+      <input type="number" id="grunts" name="grunts" [(ngModel)]="unitData.grunts">
+    </div>
+  </div>
+
   <div *ngIf="unitData.type === 'warcaster'">
     <div class="form-group">
       <label for="rackSlots">Rack Slots:</label>
       <input type="number" id="rackSlots" name="rackSlots" [(ngModel)]="unitData.rackSlots">
     </div>
+    <!-- Add feat and spells input if needed -->
   </div>
 
-  <!-- Display current unit data for debugging/transparency -->
+  <div *ngIf="unitData.type === 'warjack'">
+    <!-- Add damage grid and options input if needed -->
+  </div>
+
+
   <details>
     <summary>Current Unit Data (JSON)</summary>
     <pre>{{ unitData | json }}</pre>
   </details>
-  
 
-  <div *ngIf="validationErrors" class="error-messages">
-    <h4>Validation Errors from Schema:</h4>
+
+  <div *ngIf="validationErrors && validationErrors.length > 0" class="error-messages">
+    <h4>Validation Errors:</h4>
     <ul>
-      <!-- Adjusted to match the pre-formatted error structure -->
       <li *ngFor="let error of validationErrors">
         {{ error.path }}: {{ error.message }}
       </li>
     </ul>
   </div>
 
-  <button type="submit" [disabled]="!unitForm.form.valid">Save Unit</button>
-  <button type="button" (click)="cancelEdit()">Cancel</button>
+  <button type="submit" [disabled]="!unitForm.form.valid || isLoading">Save Unit</button>
+  <button type="button" (click)="cancelEdit()" [disabled]="isLoading">Cancel</button>
 </form>
