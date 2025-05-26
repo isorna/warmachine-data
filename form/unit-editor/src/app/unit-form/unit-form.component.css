@@ -1,0 +1,36 @@
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.field-error {
+  color: #a94442; /* Similar to .error-messages for consistency */
+  font-size: 0.9em;
+  margin-top: 3px;
+}
+/* Add more specific form styling if needed */
+button[type="submit"] {
+  margin-right: 10px;
+}
+
+details {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+}
+details summary {
+  font-weight: bold;
+  cursor: pointer;
+}
+pre {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 4px;
+  overflow-x: auto;
+}

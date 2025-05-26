@@ -1,0 +1,19 @@
+<h2>Unit Files</h2>
+<button (click)="createNewUnit()">Create New Unit</button>
+<div *ngIf="(unitFiles$ | async) as files; else loading">
+  <ul *ngIf="files.length > 0; else noFiles" class="unit-items">
+    <li *ngFor="let fileName of files" class="unit-item">
+      <span>{{ fileName }}</span>
+      <div class="actions">
+        <button (click)="selectUnit(fileName)">Edit</button>
+        <button (click)="deleteUnit(fileName)" class="delete">Delete</button>
+      </div>
+    </li>
+  </ul>
+  <ng-template #noFiles>
+    <p>No unit files found. Create one!</p>
+  </ng-template>
+</div>
+<ng-template #loading>
+  <p>Loading unit files...</p>
+</ng-template>

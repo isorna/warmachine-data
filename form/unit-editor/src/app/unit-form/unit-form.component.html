@@ -1,0 +1,64 @@
+<h2>{{ unitFileName ? 'Edit Unit: ' + unitFileName : 'Create New Unit' }}</h2>
+
+<form (ngSubmit)="saveUnit()" #unitForm="ngForm">
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" [(ngModel)]="unitData.name" required #nameField="ngModel">
+    <div *ngIf="nameField.invalid && (nameField.dirty || nameField.touched)" class="field-error">
+      Name is required.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="type">Type:</label>
+    <select id="type" name="type" [(ngModel)]="unitData.type" (ngModelChange)="onTypeChange($event)" required #typeField="ngModel">
+      <option *ngFor="let type of availableUnitTypes" [value]="type">{{ type | titlecase }}</option>
+    </select>
+    <div *ngIf="typeField.invalid && (typeField.dirty || typeField.touched)" class="field-error">
+      Type is required.
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="faction">Faction:</label>
+    <input type="text" id="faction" name="faction" [(ngModel)]="unitData.faction" required #factionField="ngModel">
+      <div *ngIf="factionField.invalid && (factionField.dirty || factionField.touched)" class="field-error">
+      Faction is required.
+    </div>
+  </div>
+
+  <!-- Example of a conditional field based on type -->
+  <div *ngIf="unitData.type === 'solo' || unitData.type === 'unit' || unitData.type === 'attachment'">
+    <div class="form-group">
+      <label for="points">Points:</label>
+      <input type="number" id="points" name="points" [(ngModel)]="unitData.points">
+    </div>
+  </div>
+  
+  <div *ngIf="unitData.type === 'warcaster'">
+    <div class="form-group">
+      <label for="rackSlots">Rack Slots:</label>
+      <input type="number" id="rackSlots" name="rackSlots" [(ngModel)]="unitData.rackSlots">
+    </div>
+  </div>
+
+  <!-- Display current unit data for debugging/transparency -->
+  <details>
+    <summary>Current Unit Data (JSON)</summary>
+    <pre>{{ unitData | json }}</pre>
+  </details>
+  
+
+  <div *ngIf="validationErrors" class="error-messages">
+    <h4>Validation Errors from Schema:</h4>
+    <ul>
+      <!-- Adjusted to match the pre-formatted error structure -->
+      <li *ngFor="let error of validationErrors">
+        {{ error.path }}: {{ error.message }}
+      </li>
+    </ul>
+  </div>
+
+  <button type="submit" [disabled]="!unitForm.form.valid">Save Unit</button>
+  <button type="button" (click)="cancelEdit()">Cancel</button>
+</form>
